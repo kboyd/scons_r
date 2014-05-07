@@ -25,6 +25,7 @@ source_re = [
         ]
 
 def emit_r(target, source, env):
+    target = []
     for s in source:
         print('{0}'.format(str(s)))
         sdir = os.path.dirname(str(s))
