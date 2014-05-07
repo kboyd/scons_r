@@ -3,6 +3,12 @@
 # Copyright (c) 2014 Kendrick Boyd. This is free software. See LICENSE
 # for details.
 
+import re
+import os
+
+import SCons.Action
+import SCons.Builder
+
 ## TODO - improve these regular expressions
 output_re = [
         re.compile(r'''png\('([^']+)'\)''', re.M)
@@ -20,11 +26,14 @@ source_re = [
 
 def emit_r(target, source, env):
     for s in source:
+        print('{0}'.format(str(s)))
         sdir = os.path.dirname(str(s))
         contents = s.get_contents()
         for r in output_re:
             for t in r.findall(contents):
                 target.append(os.path.join(sdir, t))
+    return target, source
+
 
 def search_deps_r(node, env):
     contents = node.get_contents()
@@ -44,11 +53,11 @@ scanner_r = SCons.Scanner.Base(
     name = 'R Scanner',
     function = scan_r,
     skeys = ['.r', '.R'],
-    path_function = Sconc.Scanner.FindPathDirs('RPATH'),
+    path_function = SCons.Scanner.FindPathDirs('RPATH'),
     recursive = True)
 
-builder_r = Scons.Builder.Builder(
-    action = SCons.Action.Action('$RCOM', chdir=1)
+builder_r = SCons.Builder.Builder(
+    action = SCons.Action.Action('$RCOM', chdir=1),
     src_suffix = ['.r','.R'],
     emitter = emit_r,
     source_scanner = scanner_r)
