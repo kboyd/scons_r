@@ -38,7 +38,8 @@ Usage
 -----
 
 In a `SConstruct` or `SConscript` file, create an environment
-including the R tool and process an R script names `input.r` using
+including the R tool and process an R script named `input.r` with the
+following python code.
 
 ```python
 env = Environment(tools=['scons_r'])
