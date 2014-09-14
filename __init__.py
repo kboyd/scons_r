@@ -12,7 +12,7 @@ import SCons.Builder
 ## TODO - improve these regular expressions
 output_re = [
         re.compile(r'''png\('([^']+)'\)''', re.M)
-        , re.compile(r'''save\(.*file\s*=\s*'([^']+)'\s*[),]''', re.M)
+        , re.compile(r'''^[^#]*save\(.*file\s*=\s*['"]([^'"]+)['"]\s*[),].*$''', re.M)
         , re.compile(r'''sink\(.*file\s*=\s*'([^']+)'\s*[),]''', re.M)
         , re.compile(r'''ggsave\(.*filename\s*=\s*['"]([^'"]+)['"]\s*[),]''', re.M)
         ]
