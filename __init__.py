@@ -24,27 +24,40 @@ source_re = [
         , re.compile(r'''read\.table\(['"]([^'"]+)''', re.M)
         ]
 
+def findall(contents, regular_expressions):
+    ''' Runs findall(contents) using every re in 'regular_expressions' 
+        and returns a list off all matches.
+    '''
+    matches = []
+    for re in regular_expressions:
+        matches.extend(re.findall(contents))
+
+    return matches
+
 def emit_r(target, source, env):
     target = []
     for s in source:
-        print('{0}'.format(str(s)))
         sdir = os.path.dirname(str(s))
         contents = s.get_contents()
-        for r in output_re:
-            for t in r.findall(contents):
-                target.append(os.path.join(sdir, t))
-    return target, source
+        # find output files
+        matches = findall(contents, output_re)
+        # only iterate over the unique entries
+        for f in set(matches):
+            target.append(os.path.join(sdir, f))
+        return target, source
 
 
 def search_deps_r(node, env):
     contents = node.get_contents()
     deps = []
-    for r in source_re:
-        for d in r.findall(contents):
-            dep_path = os.path.join(os.path.dirname(str(node)), d)
-            dep_file = env.File(dep_path)
-            deps.append(dep_file)
-            deps.extend(search_deps_r(dep_file, env))
+    # find input files
+    matches = findall(contents, source_re)
+    # only iterate over the unique entries
+    for f in set(matches):
+        dep_path = os.path.join(os.path.dirname(str(node)), f)
+        dep_file = env.File(dep_path)
+        deps.append(dep_file)
+        deps.extend(search_deps_r(dep_file, env))
     return deps
 
 def scan_r(node, env, path):
