@@ -8,6 +8,7 @@ import os
 
 import SCons.Action
 import SCons.Builder
+import SCons.Scanner
 
 ## TODO - improve these regular expressions
 output_re = [

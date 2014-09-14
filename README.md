@@ -47,6 +47,27 @@ env = Environment(tools=['scons_r'])
 env.R('input.r')
 ```
 
+Testing
+-------
+
+scons_r contains both unit tests and end-to-end SCons style tests.
+Running them is currently very awkward, still searching for better way
+to setup and run the tests. My current approach is given below, but
+will need to be translated to each particular system for particular
+locations.
+
+unittests (from repository root)
+```
+export PYTHONPATH=../:/usr/lib/scons-2.3.1
+python unittest/regular\_expression\_test.py
+```
+
+end-to-end tests (from root of scons repo with runtest.py)
+```
+./runtest.py path\_to\_repo/test/basic.py
+```
+
+
 
 See also
 --------
